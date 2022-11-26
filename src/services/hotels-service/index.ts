@@ -1,6 +1,7 @@
 import hotelsRepository from "@/repositories/hotels-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import ticketRepository from "@/repositories/ticket-repository";
+import paymentRepository from "@/repositories/payment-repository";
 import { notFoundError, unauthorizedError } from "@/errors";
 
 async function getHotels(userId: number) {
@@ -33,6 +34,10 @@ async function verifyIfUserHasTicket(userId: number) {
   }
 
   if (!ticket.TicketType.includesHotel) {
+    throw unauthorizedError();
+  }
+
+  if (ticket.status !== "PAID") {
     throw unauthorizedError();
   }
 }
