@@ -1,20 +1,7 @@
 import hotelsRepository from "@/repositories/hotels-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import ticketRepository from "@/repositories/ticket-repository";
-import paymentRepository from "@/repositories/payment-repository";
 import { notFoundError, unauthorizedError } from "@/errors";
-
-async function getHotels(userId: number) {
-  await verifyIfUserHasTicket(userId);
-
-  const hotels = await hotelsRepository.findHotels();
-
-  if (hotels.length === 0) {
-    throw notFoundError();
-  }
-
-  return hotels;
-}
 
 async function verifyIfUserHasTicket(userId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
@@ -42,8 +29,33 @@ async function verifyIfUserHasTicket(userId: number) {
   }
 }
 
+async function getHotels(userId: number) {
+  await verifyIfUserHasTicket(userId);
+
+  const hotels = await hotelsRepository.findHotels();
+
+  if (hotels.length === 0) {
+    throw notFoundError();
+  }
+
+  return hotels;
+}
+
+async function getRoomsByHotelId(userId: number, hotelId: number) {
+  await verifyIfUserHasTicket(userId);
+
+  const rooms = await hotelsRepository.findRoomByHotelId(hotelId);
+
+  if (rooms.length === 0) {
+    throw notFoundError();
+  }
+
+  return rooms;
+}
+
 const hotelsService = {
   getHotels,
+  getRoomsByHotelId,
 };
 
 export default hotelsService;
