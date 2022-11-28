@@ -13,7 +13,7 @@ async function verifyIfUserHasTicket(userId: number) {
   const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
 
   if (!ticket) {
-    throw unauthorizedError();
+    throw notFoundError();
   }
 
   if (ticket.TicketType.isRemote) {
